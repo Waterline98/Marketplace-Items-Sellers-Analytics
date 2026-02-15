@@ -7,12 +7,12 @@
 ```mermaid
 flowchart LR
   subgraph S3["S3"]
-    RAW[raw_items\nparquet]
-    OUT[seller_items\nparquet]
+    RAW[raw_items\parquet]
+    OUT[seller_items\parquet]
   end
 
   subgraph K8s["Kubernetes"]
-    SPARK[Spark Job\nметрики, выручка,\nрейтинги]
+    SPARK[Spark Job\метрики, выручка,\рейтинги]
   end
 
   subgraph AF["Airflow DAG"]
