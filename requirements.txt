@@ -1,0 +1,9 @@
+# Airflow и провайдеры (оркестрация DAG, K8s, SQL, Greenplum)
+apache-airflow==2.6.2
+apache-airflow-providers-cncf-kubernetes==7.4.2
+apache-airflow-providers-common-sql==1.9.0
+apache-airflow-providers-postgres==5.6.0
+
+# Spark job: локальный запуск и загрузка .env
+pyspark==3.4.0
+python-dotenv==1.0.0

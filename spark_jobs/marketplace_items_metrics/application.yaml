@@ -1,0 +1,56 @@
+# Шаблон SparkApplication для Kubernetes (Spark Operator).
+# Перед применением подставьте переменные: IMAGE_REPO, SPARK_VERSION, SCRIPT_PATH,
+# GIT_REPO_URL (опционально), SERVICE_ACCOUNT. Tolerations — под ваш кластер.
+apiVersion: sparkoperator.k8s.io/v1beta2
+kind: SparkApplication
+metadata:
+  name: spark-job-template
+spec:
+  type: Python
+  pythonVersion: "3"
+  mode: cluster
+  image: ${IMAGE_REPO}:${SPARK_VERSION}
+  imagePullPolicy: Always
+  mainApplicationFile: ${SCRIPT_PATH}
+  sparkVersion: "3.1.1"
+  restartPolicy:
+    type: Never
+  volumes:
+    - name: git-repo
+      emptyDir:
+        sizeLimit: 500Mi
+  driver:
+    tolerations:
+      - key: workload-class
+        operator: Equal
+        effect: NoSchedule
+        value: "true"
+    volumeMounts:
+      - name: git-repo
+        mountPath: /workspace
+    initContainers:
+      - name: git-clone
+        image: alpine/git:2.40.1
+        env:
+          - name: GIT_SSH_COMMAND
+            value: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+        command: ${GIT_REPO_URL}
+        volumeMounts:
+          - name: git-repo
+            mountPath: /workspace
+          - name: ssh-key
+            mountPath: /root/.ssh
+    cores: 1
+    coreLimit: "1200m"
+    memory: "1024m"
+    serviceAccount: ${SERVICE_ACCOUNT}
+  executor:
+    tolerations:
+      - key: ${EXECUTOR_TOLERATION_KEY}
+        operator: Equal
+        effect: NoSchedule
+        value: "true"
+    cores: 1
+    coreLimit: "2500m"
+    instances: 1
+    memory: "2048m"

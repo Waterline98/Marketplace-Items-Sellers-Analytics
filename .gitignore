@@ -1,0 +1,22 @@
+# Секреты и конфигурация (никогда не коммитить)
+.env
+.env.*
+!.env.example
+*.pem
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+venv/
+.venv/
+env/
+
+# IDE и кэш
+.idea/
+.vscode/
+.pytest_cache/
+.mypy_cache/
+*.log
+*.tmp
